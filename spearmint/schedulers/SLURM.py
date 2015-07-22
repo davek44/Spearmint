@@ -190,8 +190,8 @@ def init(*args, **kwargs):
 
 class SLURMScheduler(AbstractClusterScheduler):
 
-    def submit_command(self, output_file, job_name):
-        return 'sbatch -e %s -o %s -J %s' % (output_file, output_file, job_name)
+    def submit_command(self, output_file, job_name, queue='serial_requeue', mem=8000):
+        return 'sbatch -e %s -o %s -J %s -p %s --mem %d' % (output_file, output_file, job_name, queue, mem)
 
     def output_regexp(self):
         return r'Submitted batch job (\d+)'
