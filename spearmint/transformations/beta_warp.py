@@ -202,10 +202,11 @@ def truncate_inputs(func):
     """
     def inner(cls_instance, inputs, *args):
         inputs = inputs.copy()
-        if np.any(inputs < 0):
+        eps = 1e-10
+        if np.any(inputs < 0-eps):
             warnings.warn('BetaWarp encountered negative values: %s' % inputs[inputs<0])
             inputs[inputs<0] = 0.0
-        if np.any(inputs > 1):
+        if np.any(inputs > 1+eps):
             warnings.warn('BetaWarp encountered values above 1: %s' % inputs[inputs>1])
             inputs[inputs>1] = 1.0
 
