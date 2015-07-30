@@ -189,9 +189,14 @@ def init(*args, **kwargs):
     return SLURMScheduler(*args, **kwargs)
 
 class SLURMScheduler(AbstractClusterScheduler):
+    #def submit_command(self, output_file, job_name, queue='serial_requeue', time='12:0:0', mem=8000):
+    def submit_command(self, output_file, job_name, queue='gpu', time='3-0:0:0', mem=12000):
+        if queue == 'gpu':
+            queue_str = '-p gpu -n 1 --gres=gpu:1'
+        else:
+            queue_str = '-p %s' % queue
 
-    def submit_command(self, output_file, job_name, queue='serial_requeue', mem=8000):
-        return 'sbatch -e %s -o %s -J %s -p %s --mem %d' % (output_file, output_file, job_name, queue, mem)
+        return 'sbatch -e %s -o %s -J %s %s --time %s --mem %d' % (output_file, output_file, job_name, queue_str, time, mem)
 
     def output_regexp(self):
         return r'Submitted batch job (\d+)'
